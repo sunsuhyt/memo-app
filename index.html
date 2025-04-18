@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메모 앱</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="tabs">
+                <div class="tab active">All</div>
+                <div class="tab">Active</div>
+                <div class="tab">Completed</div>
+            </div>
+            <div class="current-time"></div>
+        </div>
+        <div class="memo-list" id="memo-list">
+            <!-- 메모 목록이 여기에 동적으로 추가됩니다 -->
+        </div>
+        <div class="memo-input">
+            <input type="text" id="memo-content" placeholder="write your plan here!">
+            <button id="add-memo">Add</button>
+            <button id="voice-memo" class="voice-memo">
+                <span class="mic-text mic-off">OFF</span>
+                <span class="mic-text mic-on">ON</span>
+            </button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 

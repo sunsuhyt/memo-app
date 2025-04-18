@@ -1,0 +1,301 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+body {
+    background-color: #fce4ec;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    background-color: #fff5f7;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.header {
+    padding: 20px;
+    background-color: #ffcdd2;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.current-time {
+    color: #424242;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 5px 10px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.tab {
+    color: #757575;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 14px;
+}
+
+.tab.active {
+    color: #424242;
+    font-weight: 500;
+}
+
+.memo-list {
+    padding: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.memo-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0 12px 0;
+    margin-bottom: 10px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    position: relative;
+    gap: 5px;
+}
+
+.memo-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ffcdd2;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.memo-content {
+    flex-grow: 1;
+    color: #424242;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    margin-right: 0;
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.memo-date {
+    color: #424242;
+    font-size: 12px;
+    font-weight: 400;
+    cursor: pointer;
+    position: relative;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    min-width: 60px;
+    text-align: center;
+    margin-right: 0;
+    margin-left: auto;
+}
+
+.memo-date input[type="date"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.memo-date:hover {
+    background-color: #f5f5f5;
+}
+
+.delete-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #bdbdbd;
+    font-size: 16px;
+    padding: 5px;
+    margin-right: 10px;
+    transition: color 0.3s ease;
+}
+
+.delete-btn:hover {
+    color: #f48fb1;
+}
+
+.memo-checkbox.checked {
+    background-color: #f48fb1;
+    border-color: #f48fb1;
+}
+
+.memo-checkbox.checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 14px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.memo-checkbox.checked + .memo-content {
+    text-decoration: line-through;
+    color: #757575;
+    opacity: 0.8;
+}
+
+/* 중요 표시된 항목이 완료되었을 때도 동일한 스타일 적용 */
+.memo-checkbox.checked + .memo-content.important {
+    text-decoration: line-through;
+    color: #757575;
+    opacity: 0.8;
+    font-weight: 700;
+}
+
+.memo-content.important {
+    font-weight: 700;
+    color: #e53935;
+}
+
+.memo-actions {
+    display: flex;
+    gap: 3px;
+    margin-left: 0;
+    padding-right: 0;
+}
+
+.star-btn, .edit-btn, .delete-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #bdbdbd;
+    font-size: 16px;
+    padding: 5px;
+    transition: color 0.3s ease;
+}
+
+.star-btn:hover, .edit-btn:hover, .delete-btn:hover {
+    color: #f48fb1;
+}
+
+.star-btn.active {
+    color: #e91e63;
+}
+
+.memo-input {
+    padding: 20px;
+    display: flex;
+    gap: 10px;
+    background-color: white;
+    border-top: 1px solid #f5f5f5;
+}
+
+.memo-input input {
+    flex-grow: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    color: #424242;
+    font-size: 14px;
+}
+
+.memo-input input::placeholder {
+    color: #bdbdbd;
+}
+
+.memo-input button {
+    border: none;
+    background-color: #f48fb1;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.memo-input button:hover {
+    background-color: #f06292;
+}
+
+/* 완료된 항목의 날짜도 흐리게 처리 */
+.memo-checkbox.checked ~ .memo-date {
+    opacity: 0.8;
+    color: #757575;
+}
+
+.voice-memo {
+    position: relative;
+    width: 60px;
+    height: 40px;
+    border: none;
+    background-color: #f5f5f5;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 8px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.mic-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.mic-off {
+    color: #bdbdbd;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.mic-on {
+    color: #e91e63;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+}
+
+.voice-memo.recording {
+    background-color: #ffcdd2;
+}
+
+.voice-memo.recording .mic-off {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+}
+
+.voice-memo.recording .mic-on {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.voice-memo:hover {
+    background-color: #f8bbd0;
+} 
