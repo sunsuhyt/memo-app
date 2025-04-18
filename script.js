@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 날짜순 정렬
         filteredMemos.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        filteredMemos.forEach(memo => {
+        filteredMemos.forEach((memo, index) => {
             const memoItem = document.createElement('div');
             memoItem.className = 'memo-item';
             memoItem.innerHTML = `
@@ -140,15 +140,51 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="memo-content ${memo.important ? 'important' : ''}">${memo.content}</div>
                 <div class="memo-date">
                     ${formatDate(memo.date)}
-                    <input type="date" value="${memo.date.split('T')[0]}" onchange="updateMemoDate(${memo.id}, this.value)">
+                    <input type="date" value="${memo.date.split('T')[0]}">
                 </div>
                 <div class="memo-actions">
-                    <button class="star-btn ${memo.important ? 'active' : ''}" onclick="toggleImportant(${memo.id})">★</button>
-                    <button class="edit-btn" onclick="editMemo(${memo.id})">✎</button>
-                    <button class="delete-btn" onclick="deleteMemo(${memo.id})">×</button>
+                    <button class="star-btn ${memo.important ? 'active' : ''}" data-index="${index}">★</button>
+                    <button class="edit-btn" data-index="${index}">✎</button>
+                    <button class="delete-btn" data-index="${index}">×</button>
                 </div>
             `;
             memoList.appendChild(memoItem);
+
+            // 별표 버튼에 대한 이벤트 리스너 직접 추가
+            const starBtn = memoItem.querySelector('.star-btn');
+            starBtn.addEventListener('click', () => {
+                const memoIndex = memos.findIndex(m => m.content === memo.content);
+                if (memoIndex !== -1) {
+                    memos[memoIndex].important = !memos[memoIndex].important;
+                    localStorage.setItem('memos', JSON.stringify(memos));
+                    renderMemos();
+                }
+            });
+
+            // 수정 버튼에 대한 이벤트 리스너 직접 추가
+            const editBtn = memoItem.querySelector('.edit-btn');
+            editBtn.addEventListener('click', () => {
+                const memoIndex = memos.findIndex(m => m.content === memo.content);
+                if (memoIndex !== -1) {
+                    const newContent = prompt('메모를 수정하세요:', memos[memoIndex].content);
+                    if (newContent !== null) {
+                        memos[memoIndex].content = newContent;
+                        localStorage.setItem('memos', JSON.stringify(memos));
+                        renderMemos();
+                    }
+                }
+            });
+
+            // 삭제 버튼에 대한 이벤트 리스너 직접 추가
+            const deleteBtn = memoItem.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', () => {
+                const memoIndex = memos.findIndex(m => m.content === memo.content);
+                if (memoIndex !== -1) {
+                    memos.splice(memoIndex, 1);
+                    localStorage.setItem('memos', JSON.stringify(memos));
+                    renderMemos();
+                }
+            });
         });
 
         // 체크박스 이벤트 리스너
@@ -166,83 +202,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // 날짜 클릭 이벤트 리스너
-        document.querySelectorAll('.memo-date').forEach(dateElement => {
+        document.querySelectorAll('.memo-date').forEach((dateElement, index) => {
             dateElement.addEventListener('click', (e) => {
-                const index = e.target.dataset.index;
-                const sortedIndex = filteredMemos[index];
-                const originalIndex = memos.findIndex(memo => memo === sortedIndex);
-                const currentDate = new Date(memos[originalIndex].date);
-                const year = currentDate.getFullYear();
-                const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-                const day = String(currentDate.getDate()).padStart(2, '0');
-                const dateString = `${year}-${month}-${day}`;
-
-                // 달력 입력 필드 생성
-                const dateInput = document.createElement('input');
-                dateInput.type = 'date';
-                dateInput.value = dateString;
-                dateInput.style.position = 'absolute';
-                dateInput.style.left = '0';
-                dateInput.style.top = '0';
-                dateInput.style.opacity = '0';
-                dateInput.style.width = '100%';
-                dateInput.style.height = '100%';
-                dateInput.style.cursor = 'pointer';
-
-                // 기존 날짜 텍스트를 숨기고 달력 입력 필드 추가
-                dateElement.style.position = 'relative';
-                dateElement.appendChild(dateInput);
-
-                // 달력이 선택되면 날짜 업데이트
+                if (e.target.tagName.toLowerCase() === 'input') return;
+                
+                const dateInput = dateElement.querySelector('input[type="date"]');
+                const memoIndex = memos.findIndex(m => m.content === filteredMemos[index].content);
+                
                 dateInput.addEventListener('change', () => {
-                    if (dateInput.value) {
-                        memos[originalIndex].date = new Date(dateInput.value).toISOString();
+                    if (dateInput.value && memoIndex !== -1) {
+                        memos[memoIndex].date = new Date(dateInput.value).toISOString();
                         localStorage.setItem('memos', JSON.stringify(memos));
                         renderMemos();
                     }
                 });
 
-                // 달력 입력 필드 클릭
                 dateInput.click();
-            });
-        });
-
-        // 별표 버튼 이벤트 리스너
-        document.querySelectorAll('.star-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const index = e.target.dataset.index;
-                const sortedIndex = filteredMemos[index];
-                const originalIndex = memos.findIndex(memo => memo === sortedIndex);
-                memos[originalIndex].important = !memos[originalIndex].important;
-                localStorage.setItem('memos', JSON.stringify(memos));
-                renderMemos();
-            });
-        });
-
-        // 삭제 버튼 이벤트 리스너
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const index = e.target.dataset.index;
-                const sortedIndex = filteredMemos[index];
-                const originalIndex = memos.findIndex(memo => memo === sortedIndex);
-                memos.splice(originalIndex, 1);
-                localStorage.setItem('memos', JSON.stringify(memos));
-                renderMemos();
-            });
-        });
-
-        // 수정 버튼 이벤트 리스너
-        document.querySelectorAll('.edit-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const index = e.target.dataset.index;
-                const sortedIndex = filteredMemos[index];
-                const originalIndex = memos.findIndex(memo => memo === sortedIndex);
-                const newContent = prompt('메모를 수정하세요:', memos[originalIndex].content);
-                if (newContent !== null) {
-                    memos[originalIndex].content = newContent;
-                    localStorage.setItem('memos', JSON.stringify(memos));
-                    renderMemos();
-                }
             });
         });
     }
