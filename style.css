@@ -106,6 +106,7 @@ body {
     line-height: 1.5;
     position: relative;
     transition: transform 0.2s ease;
+    margin: 0 ;
 }
 
 .memo-content:hover {
@@ -621,6 +622,7 @@ body {
     background-color: #fff5f7;
     border-radius: 8px;
     margin-top: 20px;
+
 }
 
 #memo-content {
