@@ -17,18 +17,100 @@
             </div>
             <div class="current-time"></div>
         </div>
-        <div class="memo-list" id="memo-list">
-            <!-- 메모 목록이 여기에 동적으로 추가됩니다 -->
-        </div>
-        <div class="memo-input">
-            <input type="text" id="memo-content" placeholder="write your plan here!">
-            <button id="add-memo">Add</button>
-            <button id="voice-memo" class="voice-memo">
-                <span class="mic-text mic-off">OFF</span>
-                <span class="mic-text mic-on">ON</span>
-            </button>
+
+        <div class="diary-section">
+            <div class="calendar-header">
+                <button id="prevMonth">&lt;</button>
+                <div class="month-selector">
+                    <h2 id="currentMonth">2025년 04월</h2>
+                    <div class="date-picker" style="display: none;">
+                        <div class="year-selector">
+                            <button class="year-prev">&lt;</button>
+                            <span class="current-year">2024</span>
+                            <button class="year-next">&gt;</button>
+                        </div>
+                        <div class="month-grid">
+                            <div class="month-item" data-month="0">1월</div>
+                            <div class="month-item" data-month="1">2월</div>
+                            <div class="month-item" data-month="2">3월</div>
+                            <div class="month-item" data-month="3">4월</div>
+                            <div class="month-item" data-month="4">5월</div>
+                            <div class="month-item" data-month="5">6월</div>
+                            <div class="month-item" data-month="6">7월</div>
+                            <div class="month-item" data-month="7">8월</div>
+                            <div class="month-item" data-month="8">9월</div>
+                            <div class="month-item" data-month="9">10월</div>
+                            <div class="month-item" data-month="10">11월</div>
+                            <div class="month-item" data-month="11">12월</div>
+                        </div>
+                    </div>
+                </div>
+                <button id="nextMonth">&gt;</button>
+            </div>
+            
+            <div class="calendar-view">
+                <div class="weekdays">
+                    <div>일</div>
+                    <div>월</div>
+                    <div>화</div>
+                    <div>수</div>
+                    <div>목</div>
+                    <div>금</div>
+                    <div>토</div>
+                </div>
+                <div id="calendar-days" class="calendar-grid">
+                    <!-- 달력 날짜가 여기에 동적으로 추가됩니다 -->
+                </div>
+            </div>
+
+            <div class="diary-content">
+                <div class="memo-list" id="memo-list">
+                    <!-- 메모 목록이 여기에 동적으로 추가됩니다 -->
+                </div>
+                <div class="memo-input">
+                    <input type="text" id="memo-content" placeholder="write your plan here!">
+                    <button id="add-memo">Add</button>
+                    <button id="voice-memo" class="voice-memo">
+                        <span class="mic-text mic-off">OFF</span>
+                        <span class="mic-text mic-on">ON</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- 메모 수정 모달 -->
+    <div class="edit-modal" style="display: none;">
+        <div class="edit-modal-content">
+            <div class="edit-modal-header">
+                <h3>메모 수정</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="edit-modal-body">
+                <div class="edit-input-group">
+                    <label for="edit-content">내용</label>
+                    <textarea id="edit-content" rows="3"></textarea>
+                </div>
+                <div class="edit-date-range">
+                    <div class="edit-input-group">
+                        <label for="edit-start-date">시작 날짜</label>
+                        <input type="date" id="edit-start-date">
+                        <input type="time" id="edit-start-time">
+                    </div>
+                    <div class="edit-input-group">
+                        <label for="edit-end-date">종료 날짜</label>
+                        <input type="date" id="edit-end-date">
+                        <input type="time" id="edit-end-time">
+                    </div>
+                </div>
+            </div>
+            <div class="edit-modal-footer">
+                <button id="save-edit">저장</button>
+                <button id="cancel-edit">취소</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html> 
