@@ -652,3 +652,27 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.head.appendChild(style);
 }); 
+
+// 메모 클릭 시 전체 내용 보여주는 팝업창 기능
+const viewModal = document.querySelector('.memo-view-modal');
+const viewText = document.getElementById('memo-full-text');
+const closeViewBtn = document.querySelector('.close-view-modal');
+
+document.getElementById('memo-list').addEventListener('click', (e) => {
+    if (e.target.classList.contains('memo-content')) {
+        const content = e.target.getAttribute('data-content');
+        viewText.textContent = content;
+        viewModal.style.display = 'flex';
+    }
+});
+
+closeViewBtn.addEventListener('click', () => {
+    viewModal.style.display = 'none';
+});
+
+viewModal.addEventListener('click', (e) => {
+    if (e.target === viewModal) {
+        viewModal.style.display = 'none';
+    }
+});
+
