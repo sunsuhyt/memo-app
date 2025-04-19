@@ -471,7 +471,7 @@ body {
     border-top: 1px solid #eee;
     display: flex;
     gap: 10px;
-    margin: 0 auto;
+    margin: 0 ;
 }
 
 #memo-content {
@@ -480,14 +480,14 @@ body {
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 14px;
-    margin: 0 auto;
+    margin: 0 ;
 }
 
 #add-memo {
     padding: 6px 12px;
     width: 60px;
     height: 40px;
-    margin: 0 auto;
+    margin: 0 ;
     background-color: #4CAF50;
     color: white;
     border: none;
