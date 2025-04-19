@@ -226,8 +226,9 @@ body {
     padding: 15px;
     display: flex;
     padding: 15px;
-    width:90%;
-    max-width: 500px;
+    width: auto;
+    justify-content: flex-start;
+    max-width: 400px;
     margin: 0 auto;
     gap: 5px;
     background-color: white;
@@ -584,6 +585,7 @@ body {
 }
 
 .memo-content {
+    width: 300px;
     flex-grow: 1;
     font-size: 14px;
     color: #424242;
