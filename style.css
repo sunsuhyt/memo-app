@@ -81,7 +81,7 @@ body {
 
 .memo-item {
     display: flex;
-    align-items: center;
+    align-items: center; /* 기본 중앙 정렬 유지 */
     padding: 12px 15px; /* 패딩 조정 */
     margin-bottom: 10px;
     background-color: #fff5f7;
@@ -109,7 +109,7 @@ body {
     transition: transform 0.2s ease; display: block;
     /* max-width 제거 또는 반응형 조정 */
     /* max-width: 150px; */
-    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis; /* 기본 상태: 한 줄 + ... */
 }
 
 .dynamic-tooltip {
@@ -323,23 +323,34 @@ body {
     .memo-item {
         padding: 10px; /* 아이템 패딩 줄임 */
         gap: 8px; /* 아이템 내부 간격 줄임 */
+        /* align-items: flex-start; /* 내용 여러 줄 시 상단 정렬 */
     }
     .memo-checkbox { width: 18px; height: 18px; }
     .memo-checkbox.checked::after { font-size: 12px; }
 
     .memo-content {
-        /* max-width 제거하여 내용이 더 많이 보이도록 */
-        /* max-width: 150px; */
+        /* max-width 제거는 유지 */
         font-size: 13px; /* 모바일 폰트 크기 조정 */
+
+        /* --- 모바일에서 줄바꿈 허용 --- */
+        white-space: normal;   /* 줄바꿈 허용 */
+        overflow: visible;     /* 내용 보이도록 */
+        text-overflow: clip;   /* ellipsis 제거 */
+        word-break: break-word; /* 단어 단위 줄바꿈 */
+        /* ----------------------------- */
     }
 
     .memo-date, .memo-date-range {
         font-size: 10px; /* 날짜 폰트 크기 줄임 */
         margin-right: 8px; /* 간격 줄임 */
+        /* align-self: flex-end; /* 아래쪽 정렬 (선택 사항) */
     }
     .memo-date-range { gap: 2px; }
 
-    .memo-actions { gap: 3px; /* 액션 버튼 간격 줄임 */ }
+    .memo-actions {
+        gap: 3px; /* 액션 버튼 간격 줄임 */
+        /* align-self: flex-end; /* 아래쪽 정렬 (선택 사항) */
+    }
     .star-btn, .edit-btn, .delete-btn { font-size: 14px; padding: 2px; }
 
     .memo-input {
@@ -391,4 +402,3 @@ body {
     .edit-modal-footer { padding: 12px 15px; }
     .edit-modal-footer button { font-size: 13px; padding: 6px 12px; }
 }
-
