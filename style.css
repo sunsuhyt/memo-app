@@ -9,7 +9,6 @@ body {
     background-color: #fce4ec;
     display: flex;
     justify-content: center;
-    align-items: center;
     min-height: 100vh;
     padding: 20px;
 }
@@ -53,6 +52,7 @@ body {
     padding: 5px 10px;
     border-radius: 15px;
     font-size: 14px;
+    transition: color 0.2s ease, font-weight 0.2s ease;
 }
 
 .tab.active {
@@ -61,9 +61,12 @@ body {
 }
 
 .memo-list {
-    padding: 20px;
+    padding: 10px 20px;
     max-height: 400px;
     overflow-y: auto;
+    margin-bottom: 20px;
+    background-color: #fff;
+    border-radius: 8px;
 }
 
 .memo-item {
@@ -75,1013 +78,201 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s ease;
+    position: relative;
 }
 
-.memo-item:hover {
-    transform: translateX(5px);
-}
+.memo-item:last-child { margin-bottom: 0; }
+.memo-item:hover { transform: translateX(5px); }
 
 .memo-checkbox {
-    width: 22px;
-    height: 22px;
-    border: 2px solid #ffcdd2;
-    border-radius: 50%;
-    margin-right: 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 22px; height: 22px; border: 2px solid #ffcdd2; border-radius: 50%;
+    margin-right: 15px; cursor: pointer; transition: all 0.3s ease;
+    position: relative; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
 }
 
 .memo-content {
-    flex-grow: 1;
-    font-size: 14px;
-    color: #424242;
-    overflow: hidden;
-    text-overflow: ellipsis; 
-    white-space: nowrap; 
-    cursor: pointer; 
-    line-height: 1.5;
-    position: relative;
-    transition: transform 0.2s ease;
-    margin: 0 ;
+    flex-grow: 1; font-size: 14px; color: #424242; line-height: 1.5;
+    transition: transform 0.2s ease; display: block; max-width: 150px;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    /* margin-right: auto; /* 제거 - 날짜/액션 그룹을 오른쪽으로 밀기 위해 */
 }
 
-.memo-content:hover {
-    transform: none;
+.dynamic-tooltip {
+    position: fixed; display: none; background-color: #fff; padding: 10px;
+    border-radius: 4px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); z-index: 1001;
+    width: max-content; max-width: 300px; white-space: pre-wrap; word-break: break-word;
+    border: 1px solid #f48fb1; font-size: 12px; line-height: 1.4; color: #424242;
+    pointer-events: none; opacity: 0; transition: opacity 0.1s ease-in-out;
 }
+.dynamic-tooltip.visible { display: block; opacity: 1; }
+.memo-content:hover { transform: none; }
 
-.memo-content:hover::after {
-    content: attr(data-content);
-    position: absolute;
-    left: 0;
-    top: 100%;
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    z-index: 100;
-    width: max-content;
-    max-width: 250px;
-    white-space: pre-wrap;
-    word-break: break-word;
-    border: 1px solid #f48fb1;
+.memo-date, .memo-date-range {
+    font-size: 12px; color: #757575;
+    /* margin-left: 10px; */ /* 제거 */
+    margin-right: 15px; /* 액션 버튼과의 간격 유지 */
+    flex-shrink: 0; white-space: nowrap;
+    margin-left: auto; /* *** 이 요소를 오른쪽으로 밀기 *** */
 }
-
-.memo-date {
-    font-size: 12px;
-    color: #757575;
-    margin-right: 15px;
-}
-
-.memo-date input[type="date"] {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
-}
-
-.memo-date:hover {
-    background-color: #f5f5f5;
-}
-
-.delete-btn {
-    border: none;
-    background: none;
-    cursor: pointer;
-    color: #bdbdbd;
-    font-size: 16px;
-    padding: 5px;
-    margin-right: 10px;
-    transition: color 0.3s ease;
-}
-
-.delete-btn:hover {
-    color: #f48fb1;
-}
-
-.memo-checkbox.checked {
-    background-color: #f48fb1;
-    border-color: #f48fb1;
-}
-
-.memo-checkbox.checked::after {
-    content: 'V';
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    line-height: 1;
-}
-
-.memo-checkbox.checked + .memo-content {
-    text-decoration: line-through;
-    color: #757575;
-    opacity: 0.8;
-}
-
-/* 중요 표시된 항목이 완료되었을 때도 동일한 스타일 적용 */
-.memo-checkbox.checked + .memo-content.important {
-    text-decoration: line-through;
-    color: #757575;
-    opacity: 0.8;
-    font-weight: 700;
-}
-
-.memo-content.important {
-    font-weight: 700;
-    color: #e53935;
-}
+.memo-date-range { display: flex; align-items: center; gap: 5px; }
+.memo-date:hover, .memo-date-range:hover { background-color: #f5f5f5; }
 
 .memo-actions {
     display: flex;
-    gap: 3px;
-    margin-left: 0;
-    padding-right: 0;
+    gap: 8px;
+    flex-shrink: 0;
+    /* margin-left: auto; /* 제거 - 날짜 요소가 이미 오른쪽으로 밀었음 */
 }
-
 .star-btn, .edit-btn, .delete-btn {
-    border: none;
-    background: none;
-    cursor: pointer;
-    color: #bdbdbd;
-    font-size: 16px;
-    padding: 5px;
-    transition: color 0.3s ease;
+    border: none; background: none; cursor: pointer; color: #bdbdbd;
+    font-size: 16px; padding: 5px; transition: color 0.3s ease;
 }
+.star-btn:hover, .edit-btn:hover, .delete-btn:hover { color: #f48fb1; }
+.star-btn.active { color: #e91e63; }
 
-.star-btn:hover, .edit-btn:hover, .delete-btn:hover {
-    color: #f48fb1;
-}
-
-.star-btn.active {
-    color: #e91e63;
-}
+.memo-checkbox.checked { background-color: #f48fb1; border-color: #f48fb1; }
+.memo-checkbox.checked::after { content: 'V'; color: white; font-size: 16px; font-weight: bold; line-height: 1; }
+.memo-checkbox.checked + .memo-content { text-decoration: line-through; color: #757575; opacity: 0.8; }
+.memo-checkbox.checked + .memo-content.important { font-weight: 700; }
+.memo-checkbox.checked ~ .memo-date, .memo-checkbox.checked ~ .memo-date-range { opacity: 0.8; color: #757575; }
+.memo-content.important { font-weight: 700; color: #e53935; }
 
 .memo-input {
-    padding: 15px;
-    display: flex;
-    padding: 15px;
-    width: auto;
-    justify-content: flex-start;
-    max-width: 400px;
-    margin: 0 auto;
-    gap: 5px;
-    background-color: white;
-    border-top: 1px solid #f5f5f5;
+    padding: 15px 20px; display: flex; gap: 10px; background-color: #fff5f7;
+    border-top: 1px solid #eee; border-radius: 0 0 20px 20px;
 }
-
-.memo-input input {
-    flex-grow: 1;
-    border: none;
-    padding: 5px;
-    border-radius: 8px;
-    background-color: #f5f5f5;
-    color: #424242;
-    font-size: 14px;
+.memo-input input[type="text"] {
+    flex-grow: 1; padding: 12px; border: 1px solid #ffcdd2; border-radius: 6px;
+    font-size: 14px; color: #424242; background-color: white;
 }
-
-.memo-input input::placeholder {
-    color: #bdbdbd;
+.memo-input input[type="text"]::placeholder { color: #bdbdbd; }
+.memo-input button#add-memo {
+    padding: 12px 24px; background-color: #f48fb1; color: white; border: none;
+    border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer;
+    transition: background-color 0.3s ease; flex-shrink: 0;
 }
-
-.memo-input button {
-    border: none;
-    background-color: #f48fb1;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-}
-
-.memo-input button:hover {
-    background-color: #f06292;
-}
-
-/* 완료된 항목의 날짜도 흐리게 처리 */
-.memo-checkbox.checked ~ .memo-date {
-    opacity: 0.8;
-    color: #757575;
-}
+.memo-input button#add-memo:hover { background-color: #f06292; }
 
 .voice-memo {
-    position: relative;
-    width: 60px;
-    height: 40px;
-    border: none;
-    background-color: #f5f5f5;
-    cursor: pointer;
-    padding: 0;
-    margin-left: 8px;
-    border-radius: 20px;
-    transition: all 0.3s ease;
-    overflow: hidden;
+    position: relative; width: 60px; height: 44px; border: 1px solid #ffcdd2;
+    background-color: white; cursor: pointer; padding: 0; border-radius: 6px;
+    transition: all 0.3s ease; overflow: hidden; flex-shrink: 0;
 }
+.mic-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 14px; font-weight: 500; transition: all 0.3s ease; }
+.mic-off { color: #bdbdbd; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.mic-on { color: #e91e63; opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+.voice-memo.recording { background-color: #ffcdd2; border-color: #f48fb1; }
+.voice-memo.recording .mic-off { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+.voice-memo.recording .mic-on { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.voice-memo:hover:not(.recording) { background-color: #fce4ec; }
 
-.mic-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.mic-off {
-    color: #bdbdbd;
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-}
-
-.mic-on {
-    color: #e91e63;
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.5);
-}
-
-.voice-memo.recording {
-    background-color: #ffcdd2;
-}
-
-.voice-memo.recording .mic-off {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.5);
-}
-
-.voice-memo.recording .mic-on {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-}
-
-.voice-memo:hover {
-    background-color: #f8bbd0;
-}
-
-.calendar-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.calendar-nav button {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 5px 10px;
-    color: #333;
-}
-
-.calendar-nav h2 {
-    font-size: 20px;
-    font-weight: 500;
-    color: #333;
-}
-
-.weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    text-align: center;
-    font-weight: 500;
-    color: #666;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-}
-
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-}
-
-.calendar-day {
-    aspect-ratio: 1;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    padding: 5px;
-    cursor: pointer;
-    position: relative;
-}
-
-.calendar-day:hover {
-    background-color: #f8f8f8;
-}
-
-.calendar-day.today {
-    background-color: #e3f2fd;
-    border-color: #2196F3;
-}
-
-.calendar-day.has-memo {
-    background-color: #e8f5e9;  /* 연두색 배경 */
-    border-color: #ea84ff;
-}
-.calendar-day.has-memo::after {
-    content: '';
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    width: 6px;
-    height: 6px;
-    background-color: #4CAF50;
-    border-radius: 50%;
-}
-
-/* 오늘이면서 메모가 있는 경우 스타일 강화 */
-.calendar-day.today.has-memo::after {
-    background-color: #2E7D32; /* 진한 초록 */
-}
-
-/* 공휴일이면서 메모 있는 경우 - 겹치는 스타일 고려 */
-.calendar-day.holiday.has-memo::after {
-    background-color: #fc3f3b; /* 빨간 점 */
-}
-
-
-.calendar-day .date {
-    font-size: 14px;
-    color: #333;
-}
-
-.calendar-day.other-month .date {
-    color: #ccc;
-}
-
-.memo-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 500px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
-}
-
-.memo-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid #eee;
-}
-
-.memo-header h3 {
-    font-size: 18px;
-    color: #333;
-}
-
-#close-memo {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #666;
-}
-
-.memo-list {
-    max-height: 300px;
-    overflow-y: auto;
-    padding: 10px 20px;
-}
-
-.memo-item {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.memo-item:last-child {
-    border-bottom: none;
-}
-
-.memo-input {
-    padding: 15px 20px;
-    border-top: 1px solid #eee;
-    display: flex;
-    gap: 10px;
-    margin: 0 ;
-}
-
-#memo-content {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    margin: 0 ;
-}
-
-#add-memo {
-    padding: 6px 12px;
-    width: 60px;
-    height: 40px;
-    margin: 0 ;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-#add-memo:hover {
-    background-color: #45a049;
-}
-
-.diary-section {
-    background-color: white;
-    border-radius: 15px;
-    margin: 20px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
+.diary-section { padding: 20px; }
 .calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #ffcdd2;
-}
-
-.calendar-header button {
-    background: none;
-    border: none;
-    font-size: 20px;
-    color: #f48fb1;
-    cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 50%;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.calendar-header button:hover {
-    background-color: #fce4ec;
-    color: #f06292;
-    transform: scale(1.1);
-}
-
-.calendar-header h2 {
-    font-size: 18px;
-    color: #424242;
-    font-weight: 500;
-}
-
-.diary-content {
-    background-color: white;
-    border-radius: 10px;
-    padding: 20px;
-}
-
-.memo-list {
-    max-height: 400px;
-    overflow-y: auto;
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: #fff;
-    border-radius: 8px;
-}
-
-.memo-item {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    margin-bottom: 10px;
-    background-color: #fff5f7;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease;
-}
-
-.memo-item:hover {
-    transform: translateX(5px);
-}
-
-.memo-checkbox {
-    width: 22px;
-    height: 22px;
-    border: 2px solid #ffcdd2;
-    border-radius: 50%;
-    margin-right: 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.memo-content {
-    width: 300px;
-    flex-grow: 1;
-    font-size: 14px;
-    color: #424242;
-    line-height: 1.5;
-}
-
-.memo-date {
-    font-size: 12px;
-    color: #757575;
-    margin-right: 15px;
-}
-
-.memo-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.memo-actions button {
-    background: none;
-    border: none;
-    color: #f48fb1;
-    cursor: pointer;
-    font-size: 16px;
-    padding: 5px;
-    transition: color 0.3s ease;
-}
-
-.memo-actions button:hover {
-    color: #f06292;
-}
-
-.memo-input {
-    display: flex;
-    gap: 10px;
-    padding: 15px;
-    background-color: #fff5f7;
-    border-radius: 8px;
-    margin-top: 20px;
-
-}
-
-#memo-content {
-    flex-grow: 1;
-    padding: 12px;
-    border: 1px solid #ffcdd2;
-    border-radius: 6px;
-    font-size: 14px;
-    color: #424242;
-    background-color: white;
-}
-
-#memo-content::placeholder {
-    color: #bdbdbd;
-}
-
-#add-memo {
-    padding: 12px 24px;
-    background-color: #f48fb1;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#add-memo:hover {
-    background-color: #f06292;
-}
-
-.month-selector {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 15px; padding-bottom: 15px; border-bottom: 2px solid #ffcdd2;
     position: relative;
-    cursor: pointer;
 }
+.calendar-header button {
+    background: none; border: none; font-size: 20px; color: #f48fb1; cursor: pointer;
+    padding: 8px 12px; border-radius: 50%; transition: all 0.2s ease;
+    display: flex; align-items: center; justify-content: center;
+}
+.calendar-header button:hover { background-color: #fce4ec; color: #f06292; transform: scale(1.1); }
+.calendar-header h2 {
+    font-size: 18px; color: #424242; font-weight: 500; cursor: pointer;
+    padding: 5px 10px; border-radius: 4px; transition: background-color 0.2s ease;
+}
+.calendar-header h2:hover { background-color: rgba(255, 255, 255, 0.3); }
 
 .date-picker {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    z-index: 1000;
-    width: 280px;
-    margin-top: 10px;
+    position: absolute; top: calc(100% + 5px); left: 50%; transform: translateX(-50%);
+    background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    padding: 15px; z-index: 1000; width: 280px; display: none;
 }
+.year-selector { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px; }
+.year-selector button { background: none; border: none; font-size: 18px; color: #f48fb1; cursor: pointer; padding: 5px 10px; }
+.current-year { font-size: 16px; font-weight: 500; color: #424242; }
+.month-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.month-item { padding: 8px; text-align: center; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; color: #424242; font-size: 14px; }
+.month-item:hover { background-color: #fce4ec; transform: scale(1.05); }
+.month-item.selected { background-color: #f48fb1; color: white; font-weight: 500; }
+.month-item.selected:hover { background-color: #f06292; }
 
-.year-selector {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding: 0 10px;
-}
-
-.year-selector button {
-    background: none;
-    border: none;
-    font-size: 18px;
-    color: #f48fb1;
-    cursor: pointer;
-    padding: 5px 10px;
-}
-
-.current-year {
-    font-size: 16px;
-    font-weight: 500;
-    color: #424242;
-}
-
-.month-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-}
-
-.month-item {
-    padding: 8px;
-    text-align: center;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: #424242;
-}
-
-.month-item:hover {
-    background-color: #fce4ec;
-    transform: scale(1.05);
-}
-
-.month-item.selected {
-    background-color: #f48fb1;
-    color: white;
-    font-weight: 500;
-}
-
-.month-item.selected:hover {
-    background-color: #f06292;
-}
-
-.calendar-view {
-    margin-top: 20px;
-    padding: 15px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.weekdays div {
-    padding: 8px;
-    font-size: 14px;
-    color: #757575;
-    font-weight: 500;
-}
-
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-}
+.calendar-view { padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); }
+.weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; margin-bottom: 10px; }
+.weekdays div { padding: 8px; font-size: 14px; color: #757575; font-weight: 500; }
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
 
 .calendar-day {
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    color: #424242;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
+    aspect-ratio: 1; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; font-size: 14px; color: #424242; border-radius: 50%;
+    cursor: pointer; transition: all 0.2s ease; position: relative;
+    border: 2px solid transparent; padding: 2px;
 }
-
-.calendar-day:hover {
-    background-color: #fce4ec;
-}
-
-.calendar-day.today {
-    background-color: #f48fb1;
-    color: white;
-}
-
-.calendar-day.other-month {
-    color: #bdbdbd;
-}
+.calendar-day:hover { background-color: #fce4ec; }
+.calendar-day.other-month { color: #bdbdbd; cursor: default; }
+.calendar-day.other-month:hover { background-color: transparent; }
+.calendar-day.today { background-color: #f48fb1; color: white; font-weight: bold; }
+.calendar-day.selected { border-color: #f48fb1; font-weight: 500; }
+.calendar-day.selected.today { background-color: #f48fb1; border-color: #f06292; color: white; }
 
 .calendar-day.has-memo::after {
-    content: '';
-    position: absolute;
-    bottom: 2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background-color: #f48fb1;
+    content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
+    width: 5px; height: 5px; border-radius: 50%; background-color: #f48fb1;
 }
+.calendar-day.today.has-memo::after { background-color: white; }
+.calendar-day.selected.has-memo::after { background-color: #e91e63; }
 
-.calendar-day.selected {
-    background-color: #fce4ec;
-    border: 2px solid #f48fb1;
-    color: #424242;
-    font-weight: 500;
-}
+/* 완료되지 않은 메모가 있는 날짜 배경 */
+.calendar-day.has-uncompleted-memo { background-color: #ffebee; }
+.calendar-day.selected.has-uncompleted-memo { background-color: #ffcdd2; border-color: #ef9a9a; }
+.calendar-day.today.has-uncompleted-memo { background-color: #ef9a9a; color: #c62828; }
+.calendar-day.today.selected.has-uncompleted-memo { background-color: #e57373; border-color: #ef5350; color: white; }
 
-.calendar-day.selected.today {
-    background-color: #f48fb1;
-    border: 2px solid #f06292;
-    color: white;
-}
+/* 모든 메모 완료 날짜 배경 */
+.calendar-day:not(.has-uncompleted-memo).all-memos-completed { background-color: #e1f5fe; }
+.calendar-day:not(.has-uncompleted-memo).selected.all-memos-completed { background-color: #b3e5fc; border-color: #81d4fa; }
+.calendar-day:not(.has-uncompleted-memo).today.all-memos-completed { background-color: #80deea; color: #006064; }
+.calendar-day:not(.has-uncompleted-memo).today.selected.all-memos-completed { background-color: #4dd0e1; border-color: #00acc1; color: white; }
 
-.edit-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
+/* 주말 색상 */
+.weekdays div:first-child, .calendar-day:nth-child(7n+1) { color: #E53935; }
+.weekdays div:last-child, .calendar-day:nth-child(7n) { color: #1976D2; }
+.calendar-day.other-month:nth-child(7n+1) { color: #EF9A9A; }
+.calendar-day.other-month:nth-child(7n) { color: #90CAF9; }
+.calendar-day.today:nth-child(7n+1), .calendar-day.today:nth-child(7n) { color: white; }
 
-.edit-modal-content {
-    background-color: white;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+/* 공휴일 색상 */
+.calendar-day.holiday { color: #E53935 !important; font-weight: 500; }
+.calendar-day.holiday.other-month { color: #EF9A9A !important; }
+.calendar-day.holiday.today { color: white !important; font-weight: bold; }
+.calendar-day.holiday:hover { background-color: #ffebee; }
+.calendar-day[title] { position: relative; cursor: help; }
+.calendar-day[title]:hover::after { content: attr(title); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-2px); padding: 4px 8px; background-color: rgba(0, 0, 0, 0.8); color: white; font-size: 12px; border-radius: 4px; white-space: nowrap; z-index: 1000; pointer-events: none; }
 
-.edit-modal-header {
-    padding: 15px 20px;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+/* 메모 수정 모달 */
+.edit-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 1000; }
+.edit-modal[style*="display: flex"] { display: flex !important; }
+.edit-modal-content { background-color: white; border-radius: 10px; width: 90%; max-width: 400px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+.edit-modal-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+.edit-modal-header h3 { margin: 0; color: #424242; font-size: 18px; }
+.close-modal { background: none; border: none; font-size: 24px; color: #757575; cursor: pointer; padding: 0; }
+.close-modal:hover { color: #f48fb1; }
+.edit-modal-body { padding: 20px; }
+.edit-input-group { margin-bottom: 15px; }
+.edit-input-group label { display: block; margin-bottom: 5px; color: #757575; font-size: 14px; }
+.edit-input-group input, .edit-input-group textarea { width: 100%; padding: 8px 12px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 14px; color: #424242; }
+.edit-input-group input:focus, .edit-input-group textarea:focus { border-color: #f48fb1; outline: none; }
+.edit-input-group textarea { resize: vertical; min-height: 60px; }
+.edit-date-range { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+.edit-input-group input[type="time"] { width: 100%; margin-top: 5px; }
+.edit-modal-footer { padding: 15px 20px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 10px; }
+.edit-modal-footer button { padding: 8px 16px; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; transition: background-color 0.3s ease; }
+#save-edit { background-color: #f48fb1; color: white; }
+#save-edit:hover { background-color: #f06292; }
+#cancel-edit { background-color: #e0e0e0; color: #424242; }
+#cancel-edit:hover { background-color: #bdbdbd; }
 
-.edit-modal-header h3 {
-    margin: 0;
-    color: #424242;
-    font-size: 18px;
-}
-
-.close-modal {
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #757575;
-    cursor: pointer;
-    padding: 0;
-}
-
-.close-modal:hover {
-    color: #f48fb1;
-}
-
-.edit-modal-body {
-    padding: 20px;
-}
-
-.edit-input-group {
-    margin-bottom: 15px;
-}
-
-.edit-input-group label {
-    display: block;
-    margin-bottom: 5px;
-    color: #757575;
-    font-size: 14px;
-}
-
-.edit-input-group input {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #424242;
-}
-
-.edit-input-group input:focus {
-    border-color: #f48fb1;
-    outline: none;
-}
-
-.edit-modal-footer {
-    padding: 15px 20px;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-}
-
-.edit-modal-footer button {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#save-edit {
-    background-color: #f48fb1;
-    color: white;
-}
-
-#save-edit:hover {
-    background-color: #f06292;
-}
-
-#cancel-edit {
-    background-color: #e0e0e0;
-    color: #424242;
-}
-
-#cancel-edit:hover {
-    background-color: #bdbdbd;
-}
-
-.edit-date-range {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-.edit-input-group textarea {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #424242;
-    resize: vertical;
-    min-height: 60px;
-}
-
-.edit-input-group textarea:focus {
-    border-color: #f48fb1;
-    outline: none;
-}
-
-.edit-input-group input[type="time"] {
-    width: 100%;
-    margin-top: 5px;
-    padding: 8px 12px;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #424242;
-}
-
-.edit-input-group input[type="time"]:focus {
-    border-color: #f48fb1;
-    outline: none;
-}
-
-.memo-date-range {
-    font-size: 12px;
-    color: #757575;
-    margin-right: 15px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.memo-date-range span {
-    white-space: nowrap;
-}
-
-.weekdays div:last-child,
-.calendar-day:nth-child(7n) {
-    color: #1976D2;  /* 토요일 - 파란색 */
-}
-
-.weekdays div:first-child,
-.calendar-day:nth-child(7n+1) {
-    color: #E53935;  /* 일요일 - 빨간색 */
-}
-
-/* 다른 달의 주말도 동일한 색상으로 표시하되 더 연하게 */
-.calendar-day.other-month:nth-child(7n) {
-    color: #90CAF9;  /* 토요일 - 연한 파란색 */
-}
-
-.calendar-day.other-month:nth-child(7n+1) {
-    color: #EF9A9A;  /* 일요일 - 연한 빨간색 */
-}
-
-/* 오늘이 주말인 경우 글자색 유지 */
-.calendar-day.today:nth-child(7n),
-.calendar-day.today:nth-child(7n+1) {
-    color: white;
-}
-
-/* 선택된 날짜가 주말인 경우 글자색 유지 */
-.calendar-day.selected:nth-child(7n),
-.calendar-day.selected:nth-child(7n+1) {
-    color: #424242;
-}
-
-.calendar-day.holiday {
-    color: #E53935 !important;  /* 공휴일은 빨간색으로 표시 */
-    font-weight: 500;
-}
-
-.calendar-day.holiday.other-month {
-    color: #EF9A9A !important;  /* 다른 달의 공휴일은 연한 빨간색으로 표시 */
-}
-
-.calendar-day.holiday.today {
-    color: white !important;  /* 오늘이 공휴일인 경우 */
-    font-weight: bold;
-}
-
-.calendar-day.holiday:hover {
-    background-color: #ffebee;  /* 공휴일에 마우스 오버시 배경색 */
-}
-
-/* 툴팁 스타일 개선 */
-.calendar-day[title] {
-    position: relative;
-    cursor: help;
-}
-
-.calendar-day[title]:hover::after {
-    content: attr(title);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 4px 8px;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    font-size: 12px;
-    border-radius: 4px;
-    white-space: nowrap;
-    z-index: 1000;
-} 
-
-.memo-view-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-}
-
-.memo-view-content {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 70%;
-    width: 400px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    position: relative;
-}
-
-.memo-view-content p {
-    white-space: pre-wrap;
-    word-break: break-word;
-    font-size: 14px;
-    color: #424242;
-}
-
-.close-view-modal {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    color: #888;
-    cursor: pointer;
-}
-
-.close-view-modal:hover {
-    color: #f48fb1;
-}
+.memo-date.error { color: red; font-style: italic; font-size: 0.8em; }
+.empty-message { text-align: center; padding: 20px; color: #757575; font-size: 14px; background-color: #f5f5f5; border-radius: 8px; margin: 10px 0; }
