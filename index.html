@@ -75,10 +75,12 @@
         <div class="memo-input">
             <input type="text" id="memo-content" placeholder="write your plan here!">
             <button id="add-memo">Add</button>
-            <!-- 음성 메모 버튼: 아이콘으로 변경 -->
+            <!-- 음성 메모 버튼: 아이콘 클래스 수정 -->
             <button id="voice-memo" class="voice-memo" title="음성으로 메모하기">
-                <i class="fa-solid fa-microphone mic-icon mic-off"></i> <!-- 기본 마이크 아이콘 (OFF 상태) -->
-                <i class="fa-solid fa-microphone-slash mic-icon mic-on"></i> <!-- 마이크 금지 아이콘 (ON 상태 - 녹음 중) -->
+                <!-- OFF 상태일 때 슬래시 아이콘 -->
+                <i class="fa-solid fa-microphone-slash mic-icon mic-off"></i>
+                <!-- ON 상태(녹음 중)일 때 일반 마이크 아이콘 -->
+                <i class="fa-solid fa-microphone mic-icon mic-on"></i>
             </button>
         </div>
     </div>
