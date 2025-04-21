@@ -1,543 +1,404 @@
-/* style.css */
-
-/* 기본 스타일 및 리셋 */
 * {
-    box-sizing: border-box; /* 모든 요소의 크기 계산 방식을 padding과 border 포함으로 변경 */
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 body {
-    font-family: 'Noto Sans KR', sans-serif; /* 기본 글꼴 설정 */
-    line-height: 1.6;
-    background-color: #fff; /* 기본 배경색 */
-    color: #333; /* 기본 글자색 */
-    /* 모바일에서 스크롤 부드럽게 */
-    -webkit-overflow-scrolling: touch;
+    background-color: #fce4ec;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 10px; /* 모바일 고려하여 패딩 약간 줄임 */
 }
 
 .container {
-    max-width: 600px; /* 앱의 최대 너비 (데스크탑 고려) */
-    margin: 0 auto; /* 가운데 정렬 */
-    /* 모바일에서는 화면 전체 너비 사용 */
+    background-color: #fff5f7;
     width: 100%;
-    min-height: 100vh; /* 최소 높이를 화면 높이만큼 설정 */
-    display: flex;
-    flex-direction: column;
-    background-color: #ffffff; /* 컨테이너 배경색 */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+    max-width: 600px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex; /* 내부 요소 높이 관리를 위해 추가 */
+    flex-direction: column; /* 세로 배치 */
 }
 
-/* --- 헤더 스타일 (Sticky 적용) --- */
 .header {
+    padding: 15px 20px; /* 패딩 조정 */
+    background-color: #ffcdd2;
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px; /* 패딩 조정 */
-    background-color: #f8f9fa; /* 배경색 지정 (필수) */
-    border-bottom: 1px solid #dee2e6;
+    flex-shrink: 0; /* 헤더 높이 고정 */
+}
 
-    /* Sticky 헤더 설정 */
-    position: sticky;
-    top: 0;
-    left: 0; /* 혹시 모를 가로 스크롤 방지 */
-    z-index: 1000; /* 다른 요소 위에 표시 */
-    width: 100%; /* 부모(.container) 너비에 맞춤 */
+.current-time {
+    color: #424242;
+    font-size: 13px; /* 약간 줄임 */
+    font-weight: 500;
+    padding: 5px 10px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
 }
 
 .tabs {
     display: flex;
-    gap: 15px; /* 탭 간격 */
+    justify-content: center;
+    gap: 15px; /* 간격 약간 줄임 */
 }
 
 .tab {
-    padding: 5px 10px;
+    color: #757575;
     cursor: pointer;
-    border-radius: 4px;
-    font-weight: 500;
-    transition: background-color 0.3s ease; /* 부드러운 전환 효과 */
-}
-
-.tab:hover {
-    background-color: #e9ecef;
+    padding: 5px 8px; /* 패딩 약간 줄임 */
+    border-radius: 15px;
+    font-size: 13px; /* 약간 줄임 */
+    transition: color 0.2s ease, font-weight 0.2s ease;
 }
 
 .tab.active {
-    background-color: #007bff; /* 활성 탭 배경색 */
-    color: white; /* 활성 탭 글자색 */
+    color: #424242;
+    font-weight: 500;
 }
 
-.current-time {
-    font-size: 0.9em;
-    color: #6c757d; /* 시간 글자색 */
-}
-
-/* --- 메인 콘텐츠 영역 --- */
 .diary-section {
-    padding: 20px;
-    flex-grow: 1; /* 남은 공간을 모두 차지하도록 설정 */
-    /* 헤더가 sticky 이므로, 이 영역이 스크롤됩니다. */
-    /* 만약 헤더 높이만큼 가려진다면 아래 주석 해제 */
-    /* padding-top: 70px; */ /* 헤더 높이 + 추가 여백만큼 설정 */
-    overflow-y: auto; /* 내용이 많아지면 세로 스크롤 생성 */
+    padding: 15px; /* 패딩 조정 */
+    flex-shrink: 0; /* 달력 영역 높이 고정 */
 }
 
-/* 달력 헤더 */
-.calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    position: relative; /* Date Picker 위치 기준 */
-}
-
-.calendar-header button {
-    background: none;
-    border: none;
-    font-size: 1.5em;
-    cursor: pointer;
-    padding: 5px 10px;
-    color: #007bff;
-}
-.calendar-header button:hover {
-    color: #0056b3;
-}
-
-#currentMonth {
-    font-size: 1.2em;
-    font-weight: 500;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 4px;
-}
-#currentMonth:hover {
-    background-color: #f1f1f1;
-}
-
-/* 월/년 선택기 (Date Picker) */
-.month-selector {
-    position: relative; /* 하위 date-picker의 기준점 */
-}
-
-.date-picker {
-    position: absolute;
-    top: 100%; /* #currentMonth 바로 아래 */
-    left: 50%;
-    transform: translateX(-50%); /* 가운데 정렬 */
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    padding: 15px;
-    z-index: 1100; /* 헤더보다 위에 표시 */
-    width: 280px; /* 너비 고정 */
-}
-
-.year-selector {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-.year-selector button {
-    font-size: 1em;
-    padding: 2px 8px;
-}
-.current-year {
-    font-size: 1.1em;
-}
-
-.month-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3열 그리드 */
-    gap: 10px;
-}
-
-.month-item {
-    padding: 10px;
-    text-align: center;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-}
-.month-item:hover {
-    background-color: #e9ecef;
-}
-.month-item.selected { /* 선택된 월 스타일 (필요시 JS에서 클래스 추가) */
-    background-color: #007bff;
-    color: white;
-}
-
-
-/* 달력 뷰 */
-.calendar-view {
-    margin-bottom: 20px;
-}
-
-.weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    text-align: center;
-    font-weight: 500;
-    margin-bottom: 5px;
-    color: #6c757d;
-    font-size: 0.9em;
-}
-
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px; /* 날짜 간격 */
-}
-
-.calendar-day {
-    border: 1px solid #eee;
-    padding: 8px 5px;
-    text-align: center;
-    min-height: 60px; /* 최소 높이 */
-    position: relative;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    font-size: 0.9em;
-}
-
-.calendar-day:hover {
-    background-color: #f1f1f1;
-}
-
-.calendar-day.today {
-    background-color: #fff3cd; /* 오늘 날짜 배경 */
-    font-weight: bold;
-}
-
-.calendar-day.selected {
-    background-color: #007bff; /* 선택된 날짜 배경 */
-    color: white;
-    border-color: #0056b3;
-}
-.calendar-day.selected:hover {
-    background-color: #0056b3;
-}
-
-.calendar-day.other-month {
-    color: #ccc; /* 다른 달 날짜 흐리게 */
-    background-color: #fdfdfd;
-}
-
-.memo-dot {
-    position: absolute;
-    bottom: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 5px;
-    height: 5px;
-    background-color: red;
-    border-radius: 50%;
-}
-
-/* 메모 내용 영역 */
-.diary-content {
-    /* 특별한 스타일이 필요 없을 수 있음 */
-}
-
-/* 메모 목록 */
 .memo-list {
-    margin-bottom: 15px;
-    min-height: 100px; /* 메모가 없을 때 최소 높이 */
-    /* 내용이 많아지면 diary-section에서 스크롤됨 */
+    padding: 10px 15px; /* 패딩 조정 */
+    max-height: 400px; /* 필요 시 조정 */
+    overflow-y: auto;
+    /* margin-bottom 제거, flex-grow로 대체 */
+    background-color: #fff;
+    border-radius: 8px;
+    flex-grow: 1; /* 남는 공간 차지 (스크롤 영역 확보) */
+    margin: 0 15px 15px 15px; /* diary-section 패딩과 맞춤 */
 }
 
 .memo-item {
     display: flex;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    position: relative; /* 툴팁 기준점 */
+    align-items: center; /* 기본 중앙 정렬 유지 */
+    padding: 12px 15px; /* 패딩 조정 */
+    margin-bottom: 10px;
+    background-color: #fff5f7;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+    position: relative;
+    gap: 10px; /* 요소 간 기본 간격 */
 }
 
-.memo-item:last-child {
-    border-bottom: none;
-}
+.memo-item:last-child { margin-bottom: 0; }
+.memo-item:hover { transform: translateX(5px); }
 
 .memo-checkbox {
-    margin-right: 10px;
-    cursor: pointer;
-    width: 18px;
-    height: 18px;
+    width: 20px; height: 20px; /* 약간 줄임 */
+    border: 2px solid #ffcdd2; border-radius: 50%;
+    /* margin-right 제거, gap으로 대체 */
+    cursor: pointer; transition: all 0.3s ease;
+    position: relative; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
 }
 
-.memo-text {
-    flex-grow: 1;
-    margin-right: 10px;
-    cursor: pointer; /* 수정 가능 표시 */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.memo-content {
+    flex-grow: 1; font-size: 14px; color: #424242; line-height: 1.5;
+    transition: transform 0.2s ease; display: block;
+    /* max-width 제거 또는 반응형 조정 */
+    /* max-width: 150px; */
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis; /* 기본 상태: 한 줄 + ... */
 }
 
-.memo-item.completed .memo-text {
-    text-decoration: line-through;
-    color: #aaa;
+.dynamic-tooltip {
+    position: fixed; display: none; background-color: #fff; padding: 10px;
+    border-radius: 4px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); z-index: 1001;
+    width: max-content; max-width: 90vw; /* 화면 너비에 맞게 최대 너비 조정 */
+    white-space: pre-wrap; word-break: break-word;
+    border: 1px solid #f48fb1; font-size: 12px; line-height: 1.4; color: #424242;
+    pointer-events: none; opacity: 0; transition: opacity 0.1s ease-in-out;
 }
+.dynamic-tooltip.visible { display: block; opacity: 1; }
+.memo-content:hover { transform: none; }
 
-.memo-actions button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    margin-left: 5px;
-    font-size: 0.9em;
-    color: #6c757d;
+.memo-date, .memo-date-range {
+    font-size: 11px; /* 약간 줄임 */
+    color: #757575;
+    margin-right: 10px; /* 액션 버튼과의 간격 조정 */
+    flex-shrink: 0; white-space: nowrap;
+    margin-left: auto; /* 오른쪽 정렬 유지 */
 }
-.memo-actions button:hover {
-    color: #333;
-}
+.memo-date-range { display: flex; align-items: center; gap: 3px; /* 간격 약간 줄임 */ }
+.memo-date:hover, .memo-date-range:hover { background-color: #f5f5f5; }
 
-/* 메모 입력 */
+.memo-actions {
+    display: flex;
+    gap: 5px; /* 간격 약간 줄임 */
+    flex-shrink: 0;
+}
+.star-btn, .edit-btn, .delete-btn {
+    border: none; background: none; cursor: pointer; color: #bdbdbd;
+    font-size: 15px; /* 약간 줄임 */
+    padding: 3px; /* 패딩 약간 줄임 */
+    transition: color 0.3s ease;
+}
+.star-btn:hover, .edit-btn:hover, .delete-btn:hover { color: #f48fb1; }
+.star-btn.active { color: #e91e63; }
+
+.memo-checkbox.checked { background-color: #f48fb1; border-color: #f48fb1; }
+.memo-checkbox.checked::after { content: 'V'; color: white; font-size: 14px; /* 약간 줄임 */ font-weight: bold; line-height: 1; }
+.memo-checkbox.checked + .memo-content { text-decoration: line-through; color: #757575; opacity: 0.8; }
+.memo-checkbox.checked + .memo-content.important { font-weight: 700; }
+.memo-checkbox.checked ~ .memo-date, .memo-checkbox.checked ~ .memo-date-range { opacity: 0.8; color: #757575; }
+.memo-content.important { font-weight: 700; color: #e53935; }
+
 .memo-input {
+    padding: 15px; /* 패딩 조정 */
     display: flex;
     gap: 10px;
-    margin-top: 15px; /* 목록과의 간격 */
-    padding-top: 15px; /* 위쪽 패딩 */
-    border-top: 1px solid #eee; /* 구분선 */
+    background-color: #fff5f7;
+    border-top: 1px solid #eee;
+    border-radius: 0 0 20px 20px;
+    flex-shrink: 0; /* 입력 영역 높이 고정 */
 }
+.memo-input input[type="text"] {
+    flex-grow: 1; padding: 10px 12px; /* 패딩 조정 */
+    border: 1px solid #ffcdd2; border-radius: 6px;
+    font-size: 14px; color: #424242; background-color: white;
+    min-width: 0; /* flex 아이템이 줄어들 수 있도록 */
+}
+.memo-input input[type="text"]::placeholder { color: #bdbdbd; }
+.memo-input button#add-memo {
+    padding: 10px 18px; /* 패딩 조정 */
+    background-color: #f48fb1; color: white; border: none;
+    border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer;
+    transition: background-color 0.3s ease; flex-shrink: 0;
+}
+.memo-input button#add-memo:hover { background-color: #f06292; }
 
-#memo-content {
-    flex-grow: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1em;
+.voice-memo {
+    position: relative; width: 44px; /* 크기 조정 */ height: 40px; /* 입력 필드 높이와 맞춤 */
+    border: 1px solid #ffcdd2; background-color: white; cursor: pointer;
+    padding: 0; border-radius: 6px; transition: all 0.3s ease;
+    overflow: hidden; flex-shrink: 0;
 }
+.mic-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 13px; /* 약간 줄임 */ font-weight: 500; transition: all 0.3s ease; }
+.mic-off { color: #bdbdbd; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.mic-on { color: #e91e63; opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+.voice-memo.recording { background-color: #ffcdd2; border-color: #f48fb1; }
+.voice-memo.recording .mic-off { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+.voice-memo.recording .mic-on { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.voice-memo:hover:not(.recording) { background-color: #fce4ec; }
 
-#add-memo, #voice-memo {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
+/* 달력 관련 스타일 */
+.calendar-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px; /* 간격 조정 */ padding-bottom: 10px; /* 간격 조정 */
+    border-bottom: 2px solid #ffcdd2; position: relative;
 }
+.calendar-header button {
+    background: none; border: none; font-size: 18px; /* 약간 줄임 */ color: #f48fb1; cursor: pointer;
+    padding: 6px 10px; /* 패딩 조정 */ border-radius: 50%; transition: all 0.2s ease;
+    display: flex; align-items: center; justify-content: center;
+}
+.calendar-header button:hover { background-color: #fce4ec; color: #f06292; transform: scale(1.1); }
+.calendar-header h2 {
+    font-size: 16px; /* 약간 줄임 */ color: #424242; font-weight: 500; cursor: pointer;
+    padding: 5px 8px; /* 패딩 조정 */ border-radius: 4px; transition: background-color 0.2s ease;
+}
+.calendar-header h2:hover { background-color: rgba(255, 255, 255, 0.3); }
 
-#add-memo {
-    background-color: #28a745; /* 추가 버튼 색상 */
-    color: white;
+.date-picker {
+    position: absolute; top: calc(100% + 5px); left: 50%; transform: translateX(-50%);
+    background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    padding: 10px; /* 패딩 조정 */ z-index: 1000; width: 260px; /* 너비 조정 */ display: none;
 }
-#add-memo:hover {
-    background-color: #218838;
-}
+.year-selector { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; /* 간격 조정 */ padding: 0 5px; /* 패딩 조정 */ }
+.year-selector button { background: none; border: none; font-size: 16px; /* 약간 줄임 */ color: #f48fb1; cursor: pointer; padding: 5px; }
+.current-year { font-size: 15px; /* 약간 줄임 */ font-weight: 500; color: #424242; }
+.month-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; /* 간격 조정 */ }
+.month-item { padding: 6px; /* 패딩 조정 */ text-align: center; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; color: #424242; font-size: 13px; /* 약간 줄임 */ }
+.month-item:hover { background-color: #fce4ec; transform: scale(1.05); }
+.month-item.selected { background-color: #f48fb1; color: white; font-weight: 500; }
+.month-item.selected:hover { background-color: #f06292; }
 
-#voice-memo {
-    background-color: #ffc107; /* 음성 버튼 색상 */
-    color: #333;
-    position: relative;
-    overflow: hidden; /* 텍스트 전환 효과를 위해 */
-    width: 60px; /* 너비 고정 */
-    text-align: center;
-}
-#voice-memo:hover {
-    background-color: #e0a800;
-}
+.calendar-view { padding: 10px; /* 패딩 조정 */ background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); }
+.weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; margin-bottom: 8px; /* 간격 조정 */ }
+.weekdays div { padding: 5px; /* 패딩 조정 */ font-size: 12px; /* 약간 줄임 */ color: #757575; font-weight: 500; }
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; /* 간격 조정 */ }
 
-.mic-text {
-    display: block;
-    transition: transform 0.3s ease;
+.calendar-day {
+    aspect-ratio: 1; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; font-size: 13px; /* 약간 줄임 */ color: #424242; border-radius: 50%;
+    cursor: pointer; transition: all 0.2s ease; position: relative;
+    border: 2px solid transparent; padding: 1px; /* 패딩 조정 */
 }
-.mic-on {
-    transform: translateY(-100%); /* 기본 상태에서 위로 숨김 */
-}
-#voice-memo.recording .mic-off {
-    transform: translateY(100%); /* 녹음 중일 때 아래로 숨김 */
-}
-#voice-memo.recording .mic-on {
-    transform: translateY(0); /* 녹음 중일 때 제자리로 */
-}
-#voice-memo.recording {
-    background-color: #dc3545; /* 녹음 중 색상 */
-    color: white;
-}
+.calendar-day:hover { background-color: #fce4ec; }
+.calendar-day.other-month { color: #bdbdbd; cursor: default; }
+.calendar-day.other-month:hover { background-color: transparent; }
+.calendar-day.today { background-color: #f48fb1; color: white; font-weight: bold; }
+.calendar-day.selected { border-color: #f48fb1; font-weight: 500; }
+.calendar-day.selected.today { background-color: #f48fb1; border-color: #f06292; color: white; }
 
+.calendar-day.has-memo::after {
+    content: ''; position: absolute; bottom: 3px; /* 위치 조정 */ left: 50%; transform: translateX(-50%);
+    width: 4px; /* 크기 조정 */ height: 4px; border-radius: 50%; background-color: #f48fb1;
+}
+.calendar-day.today.has-memo::after { background-color: white; }
+.calendar-day.selected.has-memo::after { background-color: #e91e63; }
+
+/* 완료/미완료 날짜 배경 */
+.calendar-day.has-uncompleted-memo { background-color: #ffebee; }
+.calendar-day.selected.has-uncompleted-memo { background-color: #ffcdd2; border-color: #ef9a9a; }
+.calendar-day.today.has-uncompleted-memo { background-color: #ef9a9a; color: #c62828; }
+.calendar-day.today.selected.has-uncompleted-memo { background-color: #e57373; border-color: #ef5350; color: white; }
+.calendar-day:not(.has-uncompleted-memo).all-memos-completed { background-color: #e1f5fe; }
+.calendar-day:not(.has-uncompleted-memo).selected.all-memos-completed { background-color: #b3e5fc; border-color: #81d4fa; }
+.calendar-day:not(.has-uncompleted-memo).today.all-memos-completed { background-color: #80deea; color: #006064; }
+.calendar-day:not(.has-uncompleted-memo).today.selected.all-memos-completed { background-color: #4dd0e1; border-color: #00acc1; color: white; }
+
+/* 주말/공휴일 색상 */
+.weekdays div:first-child, .calendar-day:nth-child(7n+1) { color: #E53935; }
+.weekdays div:last-child, .calendar-day:nth-child(7n) { color: #1976D2; }
+.calendar-day.other-month:nth-child(7n+1) { color: #EF9A9A; }
+.calendar-day.other-month:nth-child(7n) { color: #90CAF9; }
+.calendar-day.today:nth-child(7n+1), .calendar-day.today:nth-child(7n) { color: white; }
+.calendar-day.holiday { color: #E53935 !important; font-weight: 500; }
+.calendar-day.holiday.other-month { color: #EF9A9A !important; }
+.calendar-day.holiday.today { color: white !important; font-weight: bold; }
+.calendar-day.holiday:hover { background-color: #ffebee; }
+.calendar-day[title] { position: relative; cursor: help; }
+.calendar-day[title]:hover::after { content: attr(title); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-2px); padding: 4px 8px; background-color: rgba(0, 0, 0, 0.8); color: white; font-size: 11px; /* 약간 줄임 */ border-radius: 4px; white-space: nowrap; z-index: 1000; pointer-events: none; }
 
 /* 메모 수정 모달 */
-.edit-modal {
-    position: fixed; /* 화면 전체에 고정 */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000; /* 최상단에 표시 */
-}
+.edit-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 1000; }
+.edit-modal[style*="display: flex"] { display: flex !important; }
+.edit-modal-content { background-color: white; border-radius: 10px; width: 90%; max-width: 400px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+.edit-modal-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+.edit-modal-header h3 { margin: 0; color: #424242; font-size: 18px; }
+.close-modal { background: none; border: none; font-size: 24px; color: #757575; cursor: pointer; padding: 0; }
+.close-modal:hover { color: #f48fb1; }
+.edit-modal-body { padding: 20px; }
+.edit-input-group { margin-bottom: 15px; }
+.edit-input-group label { display: block; margin-bottom: 5px; color: #757575; font-size: 14px; }
+.edit-input-group input, .edit-input-group textarea { width: 100%; padding: 8px 12px; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 14px; color: #424242; }
+.edit-input-group input:focus, .edit-input-group textarea:focus { border-color: #f48fb1; outline: none; }
+.edit-input-group textarea { resize: vertical; min-height: 60px; }
+.edit-date-range { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; /* 간격 조정 */ margin-bottom: 15px; }
+.edit-input-group input[type="time"] { width: 100%; margin-top: 5px; }
+.edit-modal-footer { padding: 15px 20px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 10px; }
+.edit-modal-footer button { padding: 8px 16px; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; transition: background-color 0.3s ease; }
+#save-edit { background-color: #f48fb1; color: white; }
+#save-edit:hover { background-color: #f06292; }
+#cancel-edit { background-color: #e0e0e0; color: #424242; }
+#cancel-edit:hover { background-color: #bdbdbd; }
 
-.edit-modal-content {
-    background-color: white;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    width: 90%; /* 모바일 너비 */
-    max-width: 500px; /* 최대 너비 */
-}
-
-.edit-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-
-.edit-modal-header h3 {
-    margin: 0;
-    font-size: 1.3em;
-}
-
-.close-modal {
-    background: none;
-    border: none;
-    font-size: 1.8em;
-    cursor: pointer;
-    line-height: 1;
-    color: #aaa;
-}
-.close-modal:hover {
-    color: #333;
-}
-
-.edit-modal-body .edit-input-group {
-    margin-bottom: 15px;
-}
-
-.edit-modal-body label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-    font-size: 0.9em;
-}
-
-#edit-content {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1em;
-    resize: vertical; /* 세로 크기 조절만 허용 */
-}
-
-.edit-date-range {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap; /* 작은 화면에서 줄바꿈 */
-}
-.edit-date-range .edit-input-group {
-    flex: 1; /* 가능한 공간 균등 분배 */
-    min-width: 150px; /* 최소 너비 */
-}
-
-.edit-date-range input[type="date"],
-.edit-date-range input[type="time"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 0.95em;
-    margin-top: 5px; /* 레이블과의 간격 */
-}
-/* 시간 입력 필드 간격 조정 */
-.edit-date-range .edit-input-group input[type="date"] + input[type="time"] {
-    margin-top: 8px;
-}
+.memo-date.error { color: red; font-style: italic; font-size: 0.8em; }
+.empty-message { text-align: center; padding: 20px; color: #757575; font-size: 14px; background-color: #f5f5f5; border-radius: 8px; margin: 10px 0; }
 
 
-.edit-modal-footer {
-    display: flex;
-    justify-content: flex-end; /* 버튼 오른쪽 정렬 */
-    gap: 10px;
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
-}
+/* --- 반응형 스타일 --- */
+@media (max-width: 600px) {
+    body {
+        padding: 5px; /* 모바일 패딩 최소화 */
+    }
 
-#save-edit, #cancel-edit {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-}
+    .container {
+        border-radius: 10px; /* 모바일에서 둥근 모서리 줄임 */
+        max-height: 100vh; /* 화면 높이에 맞춤 */
+    }
 
-#save-edit {
-    background-color: #007bff;
-    color: white;
-}
-#save-edit:hover {
-    background-color: #0056b3;
-}
-
-#cancel-edit {
-    background-color: #6c757d;
-    color: white;
-}
-#cancel-edit:hover {
-    background-color: #5a6268;
-}
-
-/* 동적 툴팁 스타일 */
-.dynamic-tooltip {
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.75);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 0.85em;
-    white-space: nowrap;
-    z-index: 3000; /* 가장 위에 표시 */
-    opacity: 0; /* 기본 숨김 */
-    transition: opacity 0.2s ease-in-out;
-    pointer-events: none; /* 툴팁이 마우스 이벤트 방해하지 않도록 */
-}
-
-/* 미디어 쿼리 (예: 작은 화면에서의 조정) */
-@media (max-width: 480px) {
     .header {
-        padding: 10px 15px; /* 작은 화면에서 패딩 줄이기 */
+        padding: 10px 15px; /* 헤더 패딩 줄임 */
     }
-    .tabs {
-        gap: 10px; /* 탭 간격 줄이기 */
+    .current-time { font-size: 12px; padding: 4px 8px; }
+    .tabs { gap: 10px; }
+    .tab { font-size: 12px; padding: 4px 6px; }
+
+    .diary-section { padding: 10px; }
+    .memo-list { padding: 8px 10px; margin: 0 10px 10px 10px; }
+
+    .memo-item {
+        padding: 10px; /* 아이템 패딩 줄임 */
+        gap: 8px; /* 아이템 내부 간격 줄임 */
+        /* align-items: flex-start; /* 내용 여러 줄 시 상단 정렬 */
     }
-    .tab {
-        padding: 4px 8px;
-        font-size: 0.9em;
+    .memo-checkbox { width: 18px; height: 18px; }
+    .memo-checkbox.checked::after { font-size: 12px; }
+
+    .memo-content {
+        /* max-width 제거는 유지 */
+        font-size: 13px; /* 모바일 폰트 크기 조정 */
+
+        /* --- 모바일에서 줄바꿈 허용 --- */
+        white-space: normal;   /* 줄바꿈 허용 */
+        overflow: visible;     /* 내용 보이도록 */
+        text-overflow: clip;   /* ellipsis 제거 */
+        word-break: break-word; /* 단어 단위 줄바꿈 */
+        /* ----------------------------- */
     }
-    .diary-section {
-        padding: 15px;
+
+    .memo-date, .memo-date-range {
+        font-size: 10px; /* 날짜 폰트 크기 줄임 */
+        margin-right: 8px; /* 간격 줄임 */
+        /* align-self: flex-end; /* 아래쪽 정렬 (선택 사항) */
     }
-    .calendar-day {
-        min-height: 50px; /* 날짜 칸 높이 줄이기 */
-        font-size: 0.85em;
+    .memo-date-range { gap: 2px; }
+
+    .memo-actions {
+        gap: 3px; /* 액션 버튼 간격 줄임 */
+        /* align-self: flex-end; /* 아래쪽 정렬 (선택 사항) */
     }
-    #memo-content {
-        font-size: 0.95em;
+    .star-btn, .edit-btn, .delete-btn { font-size: 14px; padding: 2px; }
+
+    .memo-input {
+        flex-direction: column; /* 세로 쌓기 */
+        padding: 10px;
+        border-radius: 0 0 10px 10px; /* 컨테이너 모서리 맞춤 */
     }
-    #add-memo, #voice-memo {
-        padding: 8px 12px;
+    .memo-input input[type="text"] {
+        padding: 10px 12px;
+        margin-bottom: 8px; /* 버튼과의 간격 */
     }
-    #voice-memo {
-        width: 50px; /* 버튼 크기 줄이기 */
+    .memo-input button#add-memo {
+        width: 100%; /* 버튼 너비 100% */
+        padding: 10px; /* 버튼 패딩 조정 */
+        margin-bottom: 8px; /* 음성 버튼과의 간격 */
     }
-    .edit-modal-content {
-        padding: 20px;
+    .voice-memo {
+        width: 100%; /* 버튼 너비 100% */
+        height: 38px; /* 높이 조정 */
     }
-    .edit-modal-header h3 {
-        font-size: 1.2em;
-    }
-    .edit-modal-footer {
-        gap: 8px;
-    }
-    #save-edit, #cancel-edit {
-        padding: 8px 15px;
-    }
+    .mic-text { font-size: 13px; }
+
+
+    /* 달력 반응형 조정 */
+    .calendar-header { padding-bottom: 8px; margin-bottom: 8px; }
+    .calendar-header h2 { font-size: 15px; }
+    .calendar-header button { font-size: 16px; padding: 5px 8px; }
+    .date-picker { width: 90%; padding: 8px; }
+    .year-selector { margin-bottom: 8px; }
+    .current-year { font-size: 14px; }
+    .month-grid { gap: 3px; }
+    .month-item { font-size: 12px; padding: 5px; }
+
+    .calendar-view { padding: 8px; }
+    .weekdays div { font-size: 11px; padding: 4px; }
+    .calendar-grid { gap: 2px; }
+    .calendar-day { font-size: 12px; padding: 0; border-width: 1px; } /* 패딩 제거, 테두리 얇게 */
+    .calendar-day.has-memo::after { width: 3px; height: 3px; bottom: 2px; }
+
+    /* 모달 반응형 */
+    .edit-modal-content { width: 95%; }
+    .edit-modal-header { padding: 12px 15px; }
+    .edit-modal-header h3 { font-size: 16px; }
+    .close-modal { font-size: 20px; }
+    .edit-modal-body { padding: 15px; }
+    .edit-input-group label { font-size: 13px; }
+    .edit-input-group input, .edit-input-group textarea { font-size: 13px; padding: 6px 10px; }
+    .edit-date-range { gap: 8px; }
+    .edit-modal-footer { padding: 12px 15px; }
+    .edit-modal-footer button { font-size: 13px; padding: 6px 12px; }
 }
