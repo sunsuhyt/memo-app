@@ -16,8 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabs = document.querySelectorAll('.tab');
     const currentTimeElement = document.querySelector('.current-time');
     const voiceBtn = document.getElementById('voice-memo');
-    const micOnText = voiceBtn?.querySelector('.mic-on');
-    const micOffText = voiceBtn?.querySelector('.mic-off');
+    // 아이콘 요소 선택 (HTML 변경에 따라 수정)
+    const micOffIcon = voiceBtn?.querySelector('.mic-off');
+    const micOnIcon = voiceBtn?.querySelector('.mic-on');
     const memoListContainer = document.querySelector('.memo-list');
     const dynamicTooltip = document.getElementById('dynamic-tooltip');
     const editModal = document.querySelector('.edit-modal');
@@ -193,7 +194,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedDate = dateToSelect; // 선택된 날짜 업데이트
                 updateCalendar(); // 달력 다시 렌더링 (선택 표시 업데이트)
                 renderMemos(); // 해당 날짜의 메모 렌더링
-                memoInput?.focus(); // 메모 입력 필드에 포커스
+
+                // --- 수정된 부분 ---
+                // 현재 활성화된 탭 확인
+                const activeTabElement = document.querySelector('.tab.active');
+                const activeTabText = activeTabElement ? activeTabElement.textContent : '';
+
+                // 'Active' 또는 'Completed' 탭이 아닐 때만 포커스 이동 (즉, 'All' 탭일 때만)
+                if (activeTabText !== 'Active' && activeTabText !== 'Completed') {
+                    memoInput?.focus(); // 메모 입력 필드에 포커스
+                }
+                // --- 수정 끝 ---
             });
 
             calendarDays.appendChild(dayElement);
@@ -602,9 +613,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const isRecording = isRecognizing; // 현재 인식 중 상태
         voiceBtn.classList.toggle('recording', isRecording); // 'recording' 클래스 토글
 
-        // 마이크 ON/OFF 텍스트 표시 상태 업데이트
-        if (micOnText) micOnText.style.display = isRecording ? 'inline' : 'none'; // 녹음 중일 때 ON 표시
-        if (micOffText) micOffText.style.display = isRecording ? 'none' : 'inline'; // 녹음 중 아닐 때 OFF 표시
+        // 마이크 아이콘 표시 상태 업데이트 (HTML 변경에 따라 수정)
+        if (micOnIcon) micOnIcon.style.opacity = isRecording ? '1' : '0'; // 녹음 중일 때 ON 아이콘 표시
+        if (micOffIcon) micOffIcon.style.opacity = isRecording ? '0' : '1'; // 녹음 중 아닐 때 OFF 아이콘 표시
     }
 
     function toggleVoiceRecognition() {
@@ -835,8 +846,11 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn('음성 인식이 지원되지 않는 브라우저입니다.');
         voiceBtn?.addEventListener('click', () => alert('음성 인식이 지원되지 않는 브라우저입니다.'));
         voiceBtn?.setAttribute('disabled', 'true'); // 버튼 비활성화
-        if (micOffText) micOffText.textContent = '미지원'; // 버튼 텍스트 변경
-        if (micOnText) micOnText.style.display = 'none';
+
+        // 미지원 시 아이콘 처리 (예: 회색 마이크 아이콘만 표시)
+        if (micOffIcon) micOffIcon.style.opacity = '1';
+        if (micOnIcon) micOnIcon.style.opacity = '0';
+        if (voiceBtn) voiceBtn.style.cursor = 'not-allowed';
     }
 
     // --- Initialization ---
